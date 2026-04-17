@@ -1,0 +1,47 @@
+{
+  "policies": [
+    {
+      "id": "policy_001",
+      "description": "Department isolation",
+      "effect": "deny",
+      "condition": {
+        "user.department": "!=resource.department"
+      }
+    },
+    {
+      "id": "policy_002",
+      "description": "Employees cannot access secret resources",
+      "effect": "deny",
+      "condition": {
+        "resource.classification": "secret",
+        "user.role": "Employee"
+      }
+    },
+    {
+      "id": "policy_003",
+      "description": "External users cannot access confidential or secret resources",
+      "effect": "deny",
+      "condition": {
+        "user.location": "external",
+        "resource.classification": ["confidential", "secret"]
+      }
+    },
+    {
+      "id": "policy_004",
+      "description": "Time-based access, only between 08:00 and 18:00",
+      "effect": "deny",
+      "condition": {
+        "time.outside_hours": "08:00-18:00"
+      }
+    },
+    {
+      "id": "policy_005",
+      "description": "Low clearance users cannot access secret resources",
+      "effect": "deny",
+      "condition": {
+        "user.clearance": "low",
+        "resource.classification": "secret"
+      }
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "resources": [
+    {
+      "id": "hr_001",
+      "name": "Employee Records",
+      "classification": "confidential",
+      "department": "HR",
+      "content": "List of all employee personal details and contracts."
+    },
+    {
+      "id": "hr_002",
+      "name": "Salary Data",
+      "classification": "secret",
+      "department": "HR",
+      "content": "Monthly salary breakdown for all staff."
+    },
+    {
+      "id": "hr_003",
+      "name": "Company Handbook",
+      "classification": "public",
+      "department": "HR",
+      "content": "General company policies and guidelines."
+    }
+  ]
+}
