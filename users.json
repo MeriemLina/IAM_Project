@@ -39,6 +39,14 @@
             "department": "HR",
             "clearance": "low",
             "location": "external"
+        },
+        {
+            "username": "omar",
+            "password": "omar123",
+            "role": "Manager",
+            "department": "Operations",
+            "clearance": "high",
+            "location": "internal"
         }
     ]
 }
