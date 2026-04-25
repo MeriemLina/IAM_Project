@@ -4,6 +4,7 @@ import jwt
 import uuid
 import requests
 
+
 app = Flask(__name__)
 
 # Same secret as KDC for service ticket verification

@@ -131,6 +131,7 @@
     "reason": "{'decision': 'DENY', 'reason': 'Time-based access, only between 08:00 and 18:00'}",
     "timestamp": "2026-04-23T23:41:17.725064"
   },
+
   {
     "component": "KDC",
     "event": "LOGIN",

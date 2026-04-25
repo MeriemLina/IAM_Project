@@ -4,6 +4,7 @@ import jwt
 import uuid
 import requests
 
+
 app = Flask(__name__)
 
 SERVICE_SECRET = "service_projet_iam_s8"

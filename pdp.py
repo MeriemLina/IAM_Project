@@ -127,6 +127,7 @@ def authorize():
                     "reason": policy["description"]
                 }), 200
 
+
     # If no policy matched, apply RBAC as the final check
     decision = check_rbac(context["user"]["role"], context["action"])
     requests.post("http://localhost:6000/log", json={
