@@ -1,0 +1,25 @@
+{
+  "resources": [
+    {
+      "id": "it_001",
+      "name": "Server Configurations",
+      "classification": "confidential",
+      "department": "IT",
+      "content": "Internal server configurations and infrastructure details."
+    },
+    {
+      "id": "it_002",
+      "name": "Admin Credentials",
+      "classification": "secret",
+      "department": "IT",
+      "content": "Sensitive admin access credentials."
+    },
+    {
+      "id": "it_003",
+      "name": "IT Guidelines",
+      "classification": "public",
+      "department": "IT",
+      "content": "General IT usage policies."
+    }
+  ]
+}

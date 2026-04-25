@@ -1,0 +1,25 @@
+{
+  "resources": [
+    {
+      "id": "fin_001",
+      "name": "Budget Report",
+      "classification": "confidential",
+      "department": "Finance",
+      "content": "Annual company budget and expenses."
+    },
+    {
+      "id": "fin_002",
+      "name": "Tax Records",
+      "classification": "secret",
+      "department": "Finance",
+      "content": "Tax declarations and financial audits."
+    },
+    {
+      "id": "fin_003",
+      "name": "Public Financial Summary",
+      "classification": "public",
+      "department": "Finance",
+      "content": "Public financial overview."
+    }
+  ]
+}

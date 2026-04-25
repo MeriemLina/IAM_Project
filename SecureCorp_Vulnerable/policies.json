@@ -1,0 +1,29 @@
+{
+  "policies": [
+    {
+      "id": "policy_001",
+      "description": "Department isolation",
+      "effect": "deny",
+      "condition": {
+        "user.department": "!=resource.department"
+      }
+    },
+    {
+      "id": "policy_003",
+      "description": "External users cannot access confidential or secret resources",
+      "effect": "deny",
+      "condition": {
+        "user.location": "external",
+        "resource.classification": ["confidential", "secret"]
+      }
+    },
+    {
+      "id": "policy_004",
+      "description": "Time-based access, only between 08:00 and 18:00",
+      "effect": "deny",
+      "condition": {
+        "time.outside_hours": "08:00-18:00"
+      }
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "resources": [
+    {
+      "id": "ops_001",
+      "name": "Logistics Plan",
+      "classification": "confidential",
+      "department": "Operations",
+      "content": "Operational logistics and planning data."
+    },
+    {
+      "id": "ops_002",
+      "name": "Internal Reports",
+      "classification": "secret",
+      "department": "Operations",
+      "content": "Internal strategic reports."
+    },
+    {
+      "id": "ops_003",
+      "name": "Public Operations Info",
+      "classification": "public",
+      "department": "Operations",
+      "content": "General operations overview."
+    }
+  ]
+}

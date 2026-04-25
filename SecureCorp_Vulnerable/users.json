@@ -1,0 +1,52 @@
+{
+    "users": [
+        {
+            "username": "alice",
+            "password": "alice123",
+            "role": "Manager",
+            "department": "HR",
+            "clearance": "high",
+            "location": "internal"
+        },
+        {
+            "username": "bob",
+            "password": "bob123",
+            "role": "Employee",
+            "department": "HR",
+            "clearance": "low",
+            "location": "internal"
+        },
+        {
+            "username": "charlie",
+            "password": "charlie123",
+            "role": "Employee",
+            "department": "Finance",
+            "clearance": "medium",
+            "location": "internal"
+        },
+        {
+            "username": "diana",
+            "password": "diana123",
+            "role": "Admin",
+            "department": "IT",
+            "clearance": "high",
+            "location": "internal"
+        },
+        {
+            "username": "eve",
+            "password": "eve123",
+            "role": "Employee",
+            "department": "HR",
+            "clearance": "low",
+            "location": "external"
+        },
+        {
+            "username": "omar",
+            "password": "omar123",
+            "role": "Manager",
+            "department": "Operations",
+            "clearance": "high",
+            "location": "internal"
+        }
+    ]
+}

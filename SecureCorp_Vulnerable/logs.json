@@ -1,0 +1,328 @@
+[
+  {
+    "component": "KDC",
+    "event": "LOGIN",
+    "user": "alice",
+    "action": "login",
+    "decision": "ALLOW",
+    "reason": "Valid credentials",
+    "timestamp": "2026-04-23T23:34:13.020498"
+  },
+  {
+    "component": "KDC",
+    "event": "TICKET_REQUEST",
+    "user": "alice",
+    "service": "HR",
+    "action": "request_ticket",
+    "decision": "ALLOW",
+    "reason": "Service ticket issued",
+    "timestamp": "2026-04-23T23:34:19.723700"
+  },
+  {
+    "component": "PDP",
+    "event": "ACCESS",
+    "user": "alice",
+    "service": "HR",
+    "resource": "hr_001",
+    "action": "read",
+    "decision": "DENY",
+    "reason": "Time-based access, only between 08:00 and 18:00",
+    "timestamp": "2026-04-23T23:34:30.424928"
+  },
+  {
+    "component": "RESOURCE",
+    "event": "ACCESS",
+    "user": "alice",
+    "service": "HR",
+    "resource": "hr_001",
+    "action": "read",
+    "decision": "DENY",
+    "reason": "{'decision': 'DENY', 'reason': 'Time-based access, only between 08:00 and 18:00'}",
+    "timestamp": "2026-04-23T23:34:32.471749"
+  },
+  {
+    "component": "KDC",
+    "event": "LOGIN",
+    "user": "bob",
+    "action": "login",
+    "decision": "DENY",
+    "reason": "Invalid credentials",
+    "timestamp": "2026-04-23T23:38:34.885145"
+  },
+  {
+    "component": "KDC",
+    "event": "LOGIN",
+    "user": "bob",
+    "action": "login",
+    "decision": "ALLOW",
+    "reason": "Valid credentials",
+    "timestamp": "2026-04-23T23:38:47.179670"
+  },
+  {
+    "component": "KDC",
+    "event": "TICKET_REQUEST",
+    "user": "bob",
+    "service": "IT",
+    "action": "request_ticket",
+    "decision": "ALLOW",
+    "reason": "Service ticket issued",
+    "timestamp": "2026-04-23T23:39:28.306699"
+  },
+  {
+    "component": "PDP",
+    "event": "ACCESS",
+    "user": "bob",
+    "service": "IT",
+    "resource": "it_001",
+    "action": "read",
+    "decision": "DENY",
+    "reason": "Department isolation",
+    "timestamp": "2026-04-23T23:39:41.512617"
+  },
+  {
+    "component": "RESOURCE",
+    "event": "ACCESS",
+    "user": "bob",
+    "service": "IT",
+    "resource": "it_001",
+    "action": "read",
+    "decision": "DENY",
+    "reason": "{'decision': 'DENY', 'reason': 'Department isolation'}",
+    "timestamp": "2026-04-23T23:39:43.569297"
+  },
+  {
+    "component": "KDC",
+    "event": "LOGIN",
+    "user": "diana",
+    "action": "login",
+    "decision": "ALLOW",
+    "reason": "Valid credentials",
+    "timestamp": "2026-04-23T23:40:49.029637"
+  },
+  {
+    "component": "KDC",
+    "event": "TICKET_REQUEST",
+    "user": "diana",
+    "service": "IT",
+    "action": "request_ticket",
+    "decision": "ALLOW",
+    "reason": "Service ticket issued",
+    "timestamp": "2026-04-23T23:41:03.837327"
+  },
+  {
+    "component": "PDP",
+    "event": "ACCESS",
+    "user": "diana",
+    "service": "IT",
+    "resource": "it_001",
+    "action": "read",
+    "decision": "DENY",
+    "reason": "Time-based access, only between 08:00 and 18:00",
+    "timestamp": "2026-04-23T23:41:15.703152"
+  },
+  {
+    "component": "RESOURCE",
+    "event": "ACCESS",
+    "user": "diana",
+    "service": "IT",
+    "resource": "it_001",
+    "action": "read",
+    "decision": "DENY",
+    "reason": "{'decision': 'DENY', 'reason': 'Time-based access, only between 08:00 and 18:00'}",
+    "timestamp": "2026-04-23T23:41:17.725064"
+  },
+
+  {
+    "component": "KDC",
+    "event": "LOGIN",
+    "user": "omar",
+    "action": "login",
+    "decision": "ALLOW",
+    "reason": "Valid credentials",
+    "timestamp": "2026-04-23T23:41:47.345379"
+  },
+  {
+    "component": "KDC",
+    "event": "LOGIN",
+    "user": "omar",
+    "action": "login",
+    "decision": "ALLOW",
+    "reason": "Valid credentials",
+    "timestamp": "2026-04-23T23:46:09.780533"
+  },
+  {
+    "component": "KDC",
+    "event": "TICKET_REQUEST",
+    "user": "omar",
+    "service": "OPERATIONS",
+    "action": "request_ticket",
+    "decision": "ALLOW",
+    "reason": "Service ticket issued",
+    "timestamp": "2026-04-23T23:46:18.823146"
+  },
+  {
+    "component": "RESOURCE",
+    "event": "ACCESS",
+    "user": "omar",
+    "service": "Operations",
+    "resource": "ops_002",
+    "action": "read",
+    "decision": "DENY",
+    "reason": "Ticket used for wrong service",
+    "timestamp": "2026-04-23T23:46:46.708254"
+  },
+  {
+    "component": "KDC",
+    "event": "LOGIN",
+    "user": "Alice",
+    "action": "login",
+    "decision": "DENY",
+    "reason": "Invalid credentials",
+    "timestamp": "2026-04-25T14:53:20.246628"
+  },
+  {
+    "component": "KDC",
+    "event": "LOGIN",
+    "user": "alice",
+    "action": "login",
+    "decision": "ALLOW",
+    "reason": "Valid credentials",
+    "timestamp": "2026-04-25T14:53:39.734590"
+  },
+  {
+    "component": "KDC",
+    "event": "TICKET_REQUEST",
+    "user": "alice",
+    "service": "OPERATIONS",
+    "action": "request_ticket",
+    "decision": "ALLOW",
+    "reason": "Service ticket issued",
+    "timestamp": "2026-04-25T14:53:52.318749"
+  },
+  {
+    "component": "RESOURCE",
+    "event": "ACCESS",
+    "user": "alice",
+    "service": "Operations",
+    "resource": "hr_001",
+    "action": "read",
+    "decision": "DENY",
+    "reason": "Resource not found",
+    "timestamp": "2026-04-25T14:54:03.000530"
+  },
+  {
+    "component": "RESOURCE",
+    "event": "ACCESS",
+    "user": "alice",
+    "service": "Operations",
+    "resource": "ops001",
+    "action": "read",
+    "decision": "DENY",
+    "reason": "Resource not found",
+    "timestamp": "2026-04-25T14:54:16.534065"
+  },
+  {
+    "component": "PDP",
+    "event": "ACCESS",
+    "user": "alice",
+    "service": "Operations",
+    "resource": "ops_001",
+    "action": "read",
+    "decision": "DENY",
+    "reason": "Department isolation",
+    "timestamp": "2026-04-25T14:54:27.997717"
+  },
+  {
+    "component": "RESOURCE",
+    "event": "ACCESS",
+    "user": "alice",
+    "service": "Operations",
+    "resource": "ops_001",
+    "action": "read",
+    "decision": "DENY",
+    "reason": "{'decision': 'DENY', 'reason': 'Department isolation'}",
+    "timestamp": "2026-04-25T14:54:30.040563"
+  },
+  {
+    "component": "KDC",
+    "event": "LOGIN",
+    "user": "omar",
+    "action": "login",
+    "decision": "ALLOW",
+    "reason": "Valid credentials",
+    "timestamp": "2026-04-25T14:55:04.707588"
+  },
+  {
+    "component": "KDC",
+    "event": "TICKET_REQUEST",
+    "user": "omar",
+    "service": "OPERATIONS",
+    "action": "request_ticket",
+    "decision": "ALLOW",
+    "reason": "Service ticket issued",
+    "timestamp": "2026-04-25T14:55:13.870934"
+  },
+  {
+    "component": "PDP",
+    "event": "ACCESS",
+    "user": "omar",
+    "service": "Operations",
+    "resource": "ops_001",
+    "action": "read",
+    "decision": "ALLOW",
+    "reason": "RBAC fallback",
+    "timestamp": "2026-04-25T14:55:31.672530"
+  },
+  {
+    "component": "RESOURCE",
+    "event": "ACCESS",
+    "user": "omar",
+    "service": "Operations",
+    "resource": "ops_001",
+    "action": "read",
+    "decision": "ALLOW",
+    "reason": "Access granted",
+    "timestamp": "2026-04-25T14:55:33.730331"
+  },
+  {
+    "component": "KDC",
+    "event": "LOGIN",
+    "user": "omar",
+    "action": "login",
+    "decision": "ALLOW",
+    "reason": "Valid credentials",
+    "timestamp": "2026-04-25T14:56:11.905294"
+  },
+  {
+    "component": "KDC",
+    "event": "TICKET_REQUEST",
+    "user": "omar",
+    "service": "OPERATIONS",
+    "action": "request_ticket",
+    "decision": "ALLOW",
+    "reason": "Service ticket issued",
+    "timestamp": "2026-04-25T14:56:22.891580"
+  },
+  {
+    "component": "PDP",
+    "event": "ACCESS",
+    "user": "omar",
+    "service": "Operations",
+    "resource": "ops_002",
+    "action": "read",
+    "decision": "ALLOW",
+    "reason": "RBAC fallback",
+    "timestamp": "2026-04-25T14:56:34.355612"
+  },
+  {
+    "component": "RESOURCE",
+    "event": "ACCESS",
+    "user": "omar",
+    "service": "Operations",
+    "resource": "ops_002",
+    "action": "read",
+    "decision": "ALLOW",
+    "reason": "Access granted",
+    "timestamp": "2026-04-25T14:56:36.396154"
+  }
+]
