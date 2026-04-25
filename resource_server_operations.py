@@ -27,12 +27,32 @@ def get_resource(resource_id):
 
     # Check presence of headers
     if not service_ticket or not authenticator:
+        requests.post("http://localhost:6000/log", json={
+            "component": "RESOURCE",
+            "event": "ACCESS",
+            "user": "unknown",
+            "service": "Operations",
+            "resource": resource_id,
+            "action": "read",
+            "decision": "DENY",
+            "reason": "Missing ticket or authenticator"
+        })
         return jsonify({"error": "Missing ticket or authenticator"}), 401
 
     # -------------------------------
     # 🔒 Replay attack protection
     # -------------------------------
     if authenticator in used_authenticators:
+        requests.post("http://localhost:6000/log", json={
+            "component": "RESOURCE",
+            "event": "ATTACK",
+            "user": "unknown",
+            "service": "Operations",
+            "resource": resource_id,
+            "action": "replay",
+            "decision": "DENY",
+            "reason": "Replay attack detected"
+        })
         return jsonify({"error": "Replay attack detected"}), 401
 
     used_authenticators.add(authenticator)
@@ -43,8 +63,28 @@ def get_resource(resource_id):
     try:
         ticket_data = jwt.decode(service_ticket, SERVICE_SECRET, algorithms=["HS256"])
     except jwt.ExpiredSignatureError:
+        requests.post("http://localhost:6000/log", json={
+            "component": "RESOURCE",
+            "event": "ACCESS",
+            "user": "unknown",
+            "service": "Operations",
+            "resource": resource_id,
+            "action": "read",
+            "decision": "DENY",
+            "reason": "Expired service ticket"
+        })
         return jsonify({"error": "Service ticket expired"}), 401
     except jwt.InvalidTokenError:
+        requests.post("http://localhost:6000/log", json={
+            "component": "RESOURCE",
+            "event": "ATTACK",
+            "user": "unknown",
+            "service": "Operations",
+            "resource": resource_id,
+            "action": "tampering",
+            "decision": "DENY",
+            "reason": "Invalid or tampered service ticket"
+        })
         return jsonify({"error": "Invalid service ticket"}), 401
 
     # Check ticket type
@@ -52,7 +92,17 @@ def get_resource(resource_id):
         return jsonify({"error": "Invalid ticket type"}), 401
 
     # Check service name
-    if ticket_data.get("service") != "Operations":
+    if ticket_data.get("service") != "OPERATIONS":
+        requests.post("http://localhost:6000/log", json={
+            "component": "RESOURCE",
+            "event": "ACCESS",
+            "user": ticket_data.get("username", "unknown"),
+            "service": "Operations",
+            "resource": resource_id,
+            "action": "read",
+            "decision": "DENY",
+            "reason": "Ticket used for wrong service"
+        })
         return jsonify({"error": "Ticket not valid for Operations service"}), 401
 
     # -------------------------------
@@ -62,6 +112,16 @@ def get_resource(resource_id):
     resource = next((r for r in resources if r["id"] == resource_id), None)
 
     if not resource:
+        requests.post("http://localhost:6000/log", json={
+            "component": "RESOURCE",
+            "event": "ACCESS",
+            "user": ticket_data.get("username", "unknown"),
+            "service": "Operations",
+            "resource": resource_id,
+            "action": "read",
+            "decision": "DENY",
+            "reason": "Resource not found"
+        })
         return jsonify({"error": "Resource not found"}), 404
 
     # -------------------------------
@@ -90,11 +150,31 @@ def get_resource(resource_id):
     # ✅ Final decision
     # -------------------------------
     if decision["decision"] == "ALLOW":
+        requests.post("http://localhost:6000/log", json={
+            "component": "RESOURCE",
+            "event": "ACCESS",
+            "user": ticket_data["username"],
+            "service": "Operations",
+            "resource": resource_id,
+            "action": "read",
+            "decision": "ALLOW",
+            "reason": "Access granted"
+        })
         return jsonify({
             "message": "Access granted",
             "resource": resource
         }), 200
     else:
+        requests.post("http://localhost:6000/log", json={
+            "component": "RESOURCE",
+            "event": "ACCESS",
+            "user": ticket_data["username"],
+            "service": "Operations",
+            "resource": resource_id,
+            "action": "read",
+            "decision": "DENY",
+            "reason": str(decision)
+        })
         return jsonify({
             "message": "Access denied",
             "reason": decision

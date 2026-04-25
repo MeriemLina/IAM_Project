@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import json
 import datetime
+import requests
 
 app = Flask(__name__)
 
@@ -96,11 +97,31 @@ def authorize():
 
         if condition_met:
             if policy["effect"] == "deny":
+                requests.post("http://localhost:6000/log", json={
+                    "component": "PDP",
+                    "event": "ACCESS",
+                    "user": context["user"]["username"],
+                    "service": context["resource"]["department"],
+                    "resource": context["resource"]["id"],
+                    "action": context["action"],
+                    "decision": "DENY",
+                    "reason": policy["description"]
+                })
                 return jsonify({
                     "decision": "DENY",
                     "reason": policy["description"]
                 }), 200
             elif policy["effect"] == "allow":
+                requests.post("http://localhost:6000/log", json={
+                    "component": "PDP",
+                    "event": "ACCESS",
+                    "user": context["user"]["username"],
+                    "service": context["resource"]["department"],
+                    "resource": context["resource"]["id"],
+                    "action": context["action"],
+                    "decision": "ALLOW",
+                    "reason": policy["description"]
+                })
                 return jsonify({
                     "decision": "ALLOW",
                     "reason": policy["description"]
@@ -108,6 +129,16 @@ def authorize():
 
     # If no policy matched, apply RBAC as the final check
     decision = check_rbac(context["user"]["role"], context["action"])
+    requests.post("http://localhost:6000/log", json={
+        "component": "PDP",
+        "event": "ACCESS",
+        "user": context["user"]["username"],
+        "service": context["resource"]["department"],
+        "resource": context["resource"]["id"],
+        "action": context["action"],
+        "decision": decision,
+        "reason": "RBAC fallback"
+    })
     return jsonify({"decision": decision}), 200
 
 

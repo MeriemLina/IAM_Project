@@ -33,11 +33,31 @@ def get_resource(resource_id):
 
     # Make sure both are present
     if not service_ticket or not authenticator:
+        requests.post("http://localhost:6000/log", json={
+            "component": "RESOURCE",
+            "event": "ACCESS",
+            "user": "unknown",
+            "service": "HR",  # change per file
+            "resource": resource_id,
+            "action": "read",
+            "decision": "DENY",
+            "reason": "Missing ticket or authenticator"
+        })
         return jsonify({"error": "Missing ticket or authenticator"}), 401
 
     # ---- REPLAY ATTACK PREVENTION ----
     # If this authenticator was used before, reject the request
     if authenticator in used_authenticators:
+        requests.post("http://localhost:6000/log", json={
+            "component": "RESOURCE",
+            "event": "ATTACK",
+            "user": "unknown",
+            "service": "HR",
+            "resource": resource_id,
+            "action": "replay",
+            "decision": "DENY",
+            "reason": "Replay attack detected"
+        })
         return jsonify({"error": "Replay attack detected, authenticator already used"}), 401
     
     # Mark this authenticator as used
@@ -48,8 +68,28 @@ def get_resource(resource_id):
     try:
         ticket_data = jwt.decode(service_ticket, SERVICE_SECRET, algorithms=["HS256"])
     except jwt.ExpiredSignatureError:
+        requests.post("http://localhost:6000/log", json={
+            "component": "RESOURCE",
+            "event": "ACCESS",
+            "user": "unknown",
+            "service": "HR",
+            "resource": resource_id,
+            "action": "read",
+            "decision": "DENY",
+            "reason": "Expired service ticket"
+        })
         return jsonify({"error": "Service ticket has expired"}), 401
     except jwt.InvalidTokenError:
+        requests.post("http://localhost:6000/log", json={
+            "component": "RESOURCE",
+            "event": "ATTACK",
+            "user": "unknown",
+            "service": "HR",
+            "resource": resource_id,
+            "action": "tampering",
+            "decision": "DENY",
+            "reason": "Invalid or tampered service ticket"
+        })
         return jsonify({"error": "Invalid service ticket"}), 401
 
     # Make sure it's a service ticket and not a TGT
@@ -58,6 +98,16 @@ def get_resource(resource_id):
 
     # Make sure the ticket is for the HR service
     if ticket_data.get("service") != "HR":
+        requests.post("http://localhost:6000/log", json={
+            "component": "RESOURCE",
+            "event": "ACCESS",
+            "user": ticket_data.get("username", "unknown"),
+            "service": "HR",
+            "resource": resource_id,
+            "action": "read",
+            "decision": "DENY",
+            "reason": "Ticket used for wrong service"
+        })
         return jsonify({"error": "Ticket not valid for this service"}), 401
 
     # ---- FIND THE RESOURCE ----
@@ -65,6 +115,16 @@ def get_resource(resource_id):
     resource = next((r for r in resources if r["id"] == resource_id), None)
 
     if not resource:
+        requests.post("http://localhost:6000/log", json={
+            "component": "RESOURCE",
+            "event": "ACCESS",
+            "user": ticket_data.get("username", "unknown"),
+            "service": "HR",
+            "resource": resource_id,
+            "action": "read",
+            "decision": "DENY",
+            "reason": "Resource not found"
+        })
         return jsonify({"error": "Resource not found"}), 404
 
     # ---- QUERY PDP ----
@@ -91,11 +151,31 @@ def get_resource(resource_id):
 
     # ---- GRANT OR DENY ACCESS ----
     if pdp_decision["decision"] == "ALLOW":
+        requests.post("http://localhost:6000/log", json={
+            "component": "RESOURCE",
+            "event": "ACCESS",
+            "user": ticket_data["username"],
+            "service": "HR",
+            "resource": resource_id,
+            "action": "read",
+            "decision": "ALLOW",
+            "reason": "Access granted"
+        })
         return jsonify({
             "message": "Access granted",
             "resource": resource
         }), 200
     else:
+        requests.post("http://localhost:6000/log", json={
+            "component": "RESOURCE",
+            "event": "ACCESS",
+            "user": ticket_data["username"],
+            "service": "HR",
+            "resource": resource_id,
+            "action": "read",
+            "decision": "DENY",
+            "reason": str(pdp_decision)
+        })
         return jsonify({
             "message": "Access denied",
             "reason": pdp_decision["reason"]

@@ -3,6 +3,7 @@ import json
 import jwt
 import datetime
 import uuid
+import requests
 
 app = Flask(__name__)
 
@@ -28,6 +29,14 @@ def login():
 
     # If user not found or password wrong, deny
     if not user or user["password"] != password:
+        requests.post("http://localhost:6000/log", json={
+            "component": "KDC",
+            "event": "LOGIN",
+            "user": username,
+            "action": "login",
+            "decision": "DENY",
+            "reason": "Invalid credentials"
+        })
         return jsonify({"error": "Invalid credentials"}), 401
 
     # Build the TGT payload
@@ -49,6 +58,15 @@ def login():
     # JWT handles encryption + tamper resistance for us
     tgt = jwt.encode(tgt_payload, KDC_SECRET, algorithm="HS256")
 
+    requests.post("http://localhost:6000/log", json={
+        "component": "KDC",
+        "event": "LOGIN",
+        "user": username,
+        "action": "login",
+        "decision": "ALLOW",
+        "reason": "Valid credentials"
+    })
+
     return jsonify({"tgt": tgt}), 200
 
 
@@ -64,8 +82,24 @@ def request_ticket():
     try:
         tgt_data = jwt.decode(tgt, KDC_SECRET, algorithms=["HS256"])
     except jwt.ExpiredSignatureError:
+        requests.post("http://localhost:6000/log", json={
+            "component": "KDC",
+            "event": "TICKET_REQUEST",
+            "user": "unknown",
+            "service": service,
+            "decision": "DENY",
+            "reason": "TGT expired"
+        })
         return jsonify({"error": "TGT has expired, please login again"}), 401
     except jwt.InvalidTokenError:
+        requests.post("http://localhost:6000/log", json={
+            "component": "KDC",
+            "event": "TICKET_REQUEST",
+            "user": "unknown",
+            "service": service,
+            "decision": "DENY",
+            "reason": "Invalid or tampered TGT"
+        })
         return jsonify({"error": "Invalid TGT"}), 401
 
     # Make sure it's actually a TGT and not some other token
@@ -91,6 +125,15 @@ def request_ticket():
     # The resource server will use this same secret to verify it
     service_ticket = jwt.encode(service_ticket_payload, SERVICE_SECRET, algorithm="HS256")
 
+    requests.post("http://localhost:6000/log", json={
+        "component": "KDC",
+        "event": "TICKET_REQUEST",
+        "user": tgt_data["username"],
+        "service": service,
+        "action": "request_ticket",
+        "decision": "ALLOW",
+        "reason": "Service ticket issued"
+    })
     return jsonify({"service_ticket": service_ticket}), 200
 
 

@@ -21,10 +21,30 @@ def get_resource(resource_id):
     authenticator = request.headers.get("Authenticator")
 
     if not service_ticket or not authenticator:
+        requests.post("http://localhost:6000/log", json={
+            "component": "RESOURCE",
+            "event": "ACCESS",
+            "user": "unknown",
+            "service": "Finance",
+            "resource": resource_id,
+            "action": "read",
+            "decision": "DENY",
+            "reason": "Missing ticket or authenticator"
+        })
         return jsonify({"error": "Missing ticket or authenticator"}), 401
 
     # Replay protection
     if authenticator in used_authenticators:
+        requests.post("http://localhost:6000/log", json={
+            "component": "RESOURCE",
+            "event": "ATTACK",
+            "user": "unknown",
+            "service": "Finance",
+            "resource": resource_id,
+            "action": "replay",
+            "decision": "DENY",
+            "reason": "Replay attack detected"
+        })
         return jsonify({"error": "Replay attack detected"}), 401
 
     used_authenticators.add(authenticator)
@@ -33,18 +53,58 @@ def get_resource(resource_id):
     try:
         ticket_data = jwt.decode(service_ticket, SERVICE_SECRET, algorithms=["HS256"])
     except:
+        requests.post("http://localhost:6000/log", json={
+            "component": "RESOURCE",
+            "event": "ACCESS",
+            "user": "unknown",
+            "service": "Finance",
+            "resource": resource_id,
+            "action": "read",
+            "decision": "DENY",
+            "reason": "Expired service ticket"
+        })
         return jsonify({"error": "Invalid or expired ticket"}), 401
 
     if ticket_data.get("type") != "SERVICE_TICKET":
+        requests.post("http://localhost:6000/log", json={
+            "component": "RESOURCE",
+            "event": "ATTACK",
+            "user": "unknown",
+            "service": "Finance",
+            "resource": resource_id,
+            "action": "tampering",
+            "decision": "DENY",
+            "reason": "Invalid or tampered service ticket"
+        })
         return jsonify({"error": "Invalid ticket type"}), 401
 
-    if ticket_data.get("service") != "Finance":
+    if ticket_data.get("service") != "FINANCE":
+        requests.post("http://localhost:6000/log", json={
+            "component": "RESOURCE",
+            "event": "ACCESS",
+            "user": ticket_data.get("username", "unknown"),
+            "service": "Finance",
+            "resource": resource_id,
+            "action": "read",
+            "decision": "DENY",
+            "reason": "Ticket used for wrong service"
+        })
         return jsonify({"error": "Wrong service"}), 401
 
     resources = load_data()
     resource = next((r for r in resources if r["id"] == resource_id), None)
 
     if not resource:
+        requests.post("http://localhost:6000/log", json={
+            "component": "RESOURCE",
+            "event": "ACCESS",
+            "user": ticket_data.get("username", "unknown"),
+            "service": "Finance",
+            "resource": resource_id,
+            "action": "read",
+            "decision": "DENY",
+            "reason": "Resource not found"
+        })
         return jsonify({"error": "Resource not found"}), 404
 
     # Call PDP
@@ -68,8 +128,28 @@ def get_resource(resource_id):
     decision = pdp_response.json()
 
     if decision["decision"] == "ALLOW":
+        requests.post("http://localhost:6000/log", json={
+            "component": "RESOURCE",
+            "event": "ACCESS",
+            "user": ticket_data["username"],
+            "service": "Finance",
+            "resource": resource_id,
+            "action": "read",
+            "decision": "ALLOW",
+            "reason": "Access granted"
+        })
         return jsonify({"resource": resource}), 200
     else:
+        requests.post("http://localhost:6000/log", json={
+            "component": "RESOURCE",
+            "event": "ACCESS",
+            "user": ticket_data["username"],
+            "service": "Finance",
+            "resource": resource_id,
+            "action": "read",
+            "decision": "DENY",
+            "reason": str(decision)
+        })
         return jsonify({"error": "Access denied", "reason": decision}), 403
 
 

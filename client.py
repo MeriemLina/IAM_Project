@@ -8,11 +8,11 @@ def get_service_url(service):
     service = service.upper()
     if service == "HR":
         return "http://localhost:5002"
-    elif service == "Finance":
+    elif service == "FINANCE":
         return "http://localhost:5003"
     elif service == "IT":
         return "http://localhost:5004"
-    elif service == "Operations":
+    elif service == "OPERATIONS":
         return "http://localhost:5005"
 
 # -------------------------------------------------------
